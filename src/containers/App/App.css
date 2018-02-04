@@ -1,0 +1,30 @@
+* {
+	box-sizing: border-box;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto !important;
+	border: 1px solid #888888;
+}
+
+.header {
+	background-color: #eeeeee;
+}
+
+.navigation ul {
+	list-style: none;
+	padding: 0;
+	display: flex;
+	justify-content: space-around;
+}
+
+/* .navigation li {
+	align-self: center;
+} */
+
+.form {
+	width: 100%;
+	margin-top: 100px;
+	border: 1px solid #888888;
+}
