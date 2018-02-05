@@ -10,16 +10,35 @@ class Form extends Component {
 		airport: 'ODS',
 		from: null,
 		to: null,
-		people: 2,
-		radius: 5
+		currency: 'USD',
+		radius: 10
 	};
 
-	// CDU
-	componentDidUpdate(prevProps, prevState) {
+	airportHandler = airport => {
+		this.setState({ airport });
+	};
+
+	fromDateHandler = from => {
+		this.setState({ from });
+	};
+
+	toDateHandler = to => {
+		this.setState({ to });
+	};
+
+	currencyHandler = currency => {
+		this.setState({ currency });
+	};
+
+	radiusHandler = radius => {
+		this.setState({ radius });
+	};
+
+	getRequest = () => {
 		console.log(this.state);
 
 		const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
-		const { airport, from, to } = this.state;
+		const { airport, from, to, currency, radius } = this.state;
 		axios
 			.get(
 				`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?
@@ -27,48 +46,14 @@ class Form extends Component {
 				&location=${airport}
 				&check_in=${from}
 				&check_out=${to}
+				&radius=${radius}
+				&currency=${currency}
+				&all_rooms=true
 				&number_of_results=10`
 			)
 			.then(res => console.log(res.data.results))
 			.catch(error => console.log(error));
-	}
-
-	airportHandler = airport => {
-		this.setState({ airport });
 	};
-
-	peopleHandler = people => {
-		this.setState({ people });
-	};
-
-	radiusHandler = radius => {
-		this.setState({ radius });
-	};
-
-	dateHandler = (from, to) => {
-		this.setState({
-			from,
-			to
-		});
-	};
-
-	// componentDidMount() {
-	// 	const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
-	// 	const location = this.state.airport;
-	// 	const from = this.state.from;
-	// 	const to = this.state.to;
-	// 	axios
-	// 		.get(
-	// 			`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?
-	// 			apikey=${key}
-	// 			&location=${location}
-	// 			&check_in=${from}
-	// 			&check_out=${to}
-	// 			&number_of_results=10`
-	// 		)
-	// 		.then(res => console.log(res.data.results))
-	// 		.catch(error => console.log(error));
-	// }
 
 	render() {
 		const styles = {
@@ -105,44 +90,45 @@ class Form extends Component {
 						/>
 					</DropDownMenu>
 
-					<DatePicker hintText="From" ref="from" />
+					<DatePicker
+						hintText="From"
+						ref="from"
+						onChange={() =>
+							this.fromDateHandler(
+								this.refs.from.refs.input.props.value
+							)
+						}
+					/>
 
-					<DatePicker hintText="To" ref="to" />
+					<DatePicker
+						hintText="To"
+						ref="to"
+						onChange={() =>
+							this.toDateHandler(
+								this.refs.to.refs.input.props.value
+							)
+						}
+					/>
 
 					<DropDownMenu
-						value={this.state.people}
+						value={this.state.currency}
 						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
-							value={1}
-							onClick={() => this.peopleHandler(1)}
-							primaryText="1"
+							value="USD"
+							primaryText="USD"
+							onClick={() => this.currencyHandler('USD')}
 						/>
 						<MenuItem
-							value={2}
-							onClick={() => this.peopleHandler(2)}
-							primaryText="2"
+							value="EUR"
+							primaryText="EUR"
+							onClick={() => this.currencyHandler('EUR')}
 						/>
 						<MenuItem
-							value={3}
-							onClick={() => this.peopleHandler(3)}
-							primaryText="3"
-						/>
-						<MenuItem
-							value={4}
-							onClick={() => this.peopleHandler(4)}
-							primaryText="4"
-						/>
-						<MenuItem
-							value={5}
-							onClick={() => this.peopleHandler(5)}
-							primaryText="5"
-						/>
-						<MenuItem
-							value={6}
-							onClick={() => this.peopleHandler(6)}
-							primaryText="6"
+							value="UAH"
+							primaryText="UAH"
+							onClick={() => this.currencyHandler('UAH')}
 						/>
 					</DropDownMenu>
 
@@ -152,19 +138,19 @@ class Form extends Component {
 						autoWidth={false}
 					>
 						<MenuItem
-							value={5}
-							onClick={() => this.radiusHandler(5)}
-							primaryText="5 km"
-						/>
-						<MenuItem
-							value={15}
-							onClick={() => this.radiusHandler(15)}
-							primaryText="15 km"
+							value={10}
+							onClick={() => this.radiusHandler(10)}
+							primaryText="10 km"
 						/>
 						<MenuItem
 							value={25}
 							onClick={() => this.radiusHandler(25)}
 							primaryText="25 km"
+						/>
+						<MenuItem
+							value={40}
+							onClick={() => this.radiusHandler(40)}
+							primaryText="40 km"
 						/>
 					</DropDownMenu>
 
@@ -172,12 +158,7 @@ class Form extends Component {
 						label="FIND"
 						primary={true}
 						style={styles.btn}
-						onClick={() =>
-							this.dateHandler(
-								this.refs.from.refs.input.props.value,
-								this.refs.to.refs.input.props.value
-							)
-						}
+						onClick={this.getRequest}
 					/>
 				</div>
 			</div>

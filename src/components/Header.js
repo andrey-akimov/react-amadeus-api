@@ -17,9 +17,6 @@ const Header = () => {
 		},
 		logo: {
 			alignSelf: 'center'
-		},
-		customWidth: {
-			width: 100
 		}
 	};
 
@@ -31,14 +28,6 @@ const Header = () => {
 						<h1>UkrAirHotel</h1>
 					</a>
 					<div style={styles.avatar}>
-						<DropDownMenu
-							style={styles.customWidth}
-							autoWidth={false}
-						>
-							<MenuItem value={1} primaryText="USD" />
-							<MenuItem value={2} primaryText="UAH" />
-							<MenuItem value={3} primaryText="RUB" />
-						</DropDownMenu>
 						<Avatar src="http://www.material-ui.com/images/uxceo-128.jpg" />
 					</div>
 				</GridTile>
