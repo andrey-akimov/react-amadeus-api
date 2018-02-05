@@ -4,41 +4,41 @@ import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import * as action from '../../store/actions';
 
 class Form extends Component {
-	state = {
-		airport: 'ODS',
-		from: null,
-		to: null,
-		currency: 'USD',
-		radius: 10
-	};
+	// state = {
+	// 	airport: 'ODS',
+	// 	from: null,
+	// 	to: null,
+	// 	currency: 'USD',
+	// 	radius: 10
+	// };
 
-	airportHandler = airport => {
-		this.setState({ airport });
-	};
+	// airportHandler = airport => {
+	// 	this.setState({ airport });
+	// };
 
-	fromDateHandler = from => {
-		this.setState({ from });
-	};
+	// fromDateHandler = from => {
+	// 	this.setState({ from });
+	// };
 
-	toDateHandler = to => {
-		this.setState({ to });
-	};
+	// toDateHandler = to => {
+	// 	this.setState({ to });
+	// };
 
-	currencyHandler = currency => {
-		this.setState({ currency });
-	};
+	// currencyHandler = currency => {
+	// 	this.setState({ currency });
+	// };
 
-	radiusHandler = radius => {
-		this.setState({ radius });
-	};
+	// radiusHandler = radius => {
+	// 	this.setState({ radius });
+	// };
 
 	getRequest = () => {
-		console.log(this.state);
-
 		const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
-		const { airport, from, to, currency, radius } = this.state;
+		const { airport, from, to, currency, radius } = this.props.formOptions;
 		axios
 			.get(
 				`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?
@@ -65,27 +65,34 @@ class Form extends Component {
 			}
 		};
 
+		console.log(this);
 		return (
 			<div className="form">
 				<div className="container">
 					<DropDownMenu
-						value={this.state.airport}
+						value={this.props.formOptions.airport}
 						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
 							value="ODS"
-							onClick={() => this.airportHandler('ODS')}
+							onClick={() =>
+								this.props.dispatch(action.chooseAirport('ODS'))
+							}
 							primaryText="Odessa"
 						/>
 						<MenuItem
 							value="KBP"
-							onClick={() => this.airportHandler('KBP')}
+							onClick={() =>
+								this.props.dispatch(action.chooseAirport('KBP'))
+							}
 							primaryText="Kiev"
 						/>
 						<MenuItem
 							value="LWO"
-							onClick={() => this.airportHandler('LWO')}
+							onClick={() =>
+								this.props.dispatch(action.chooseAirport('LWO'))
+							}
 							primaryText="Lviv"
 						/>
 					</DropDownMenu>
@@ -94,8 +101,10 @@ class Form extends Component {
 						hintText="From"
 						ref="from"
 						onChange={() =>
-							this.fromDateHandler(
-								this.refs.from.refs.input.props.value
+							this.props.dispatch(
+								action.chooseFromDate(
+									this.refs.from.refs.input.props.value
+								)
 							)
 						}
 					/>
@@ -104,52 +113,72 @@ class Form extends Component {
 						hintText="To"
 						ref="to"
 						onChange={() =>
-							this.toDateHandler(
-								this.refs.to.refs.input.props.value
+							this.props.dispatch(
+								action.chooseToDate(
+									this.refs.to.refs.input.props.value
+								)
 							)
 						}
 					/>
 
 					<DropDownMenu
-						value={this.state.currency}
+						value={this.props.formOptions.currency}
 						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
 							value="USD"
 							primaryText="USD"
-							onClick={() => this.currencyHandler('USD')}
+							onClick={() =>
+								this.props.dispatch(
+									action.chooseCurrency('USD')
+								)
+							}
 						/>
 						<MenuItem
 							value="EUR"
 							primaryText="EUR"
-							onClick={() => this.currencyHandler('EUR')}
+							onClick={() =>
+								this.props.dispatch(
+									action.chooseCurrency('EUR')
+								)
+							}
 						/>
 						<MenuItem
 							value="UAH"
 							primaryText="UAH"
-							onClick={() => this.currencyHandler('UAH')}
+							onClick={() =>
+								this.props.dispatch(
+									action.chooseCurrency('UAH')
+								)
+							}
 						/>
 					</DropDownMenu>
 
 					<DropDownMenu
-						value={this.state.radius}
+						value={this.props.formOptions.radius}
 						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
 							value={10}
-							onClick={() => this.radiusHandler(10)}
+							onClick={() =>
+								this.props.dispatch(action.chooseRadius(10))
+							}
 							primaryText="10 km"
 						/>
 						<MenuItem
 							value={25}
-							onClick={() => this.radiusHandler(25)}
+							onClick={() =>
+								this.props.dispatch(action.chooseRadius(25))
+							}
 							primaryText="25 km"
 						/>
 						<MenuItem
 							value={40}
-							onClick={() => this.radiusHandler(40)}
+							onClick={() =>
+								this.props.dispatch(action.chooseRadius(40))
+							}
 							primaryText="40 km"
 						/>
 					</DropDownMenu>
@@ -166,4 +195,10 @@ class Form extends Component {
 	}
 }
 
-export default Form;
+const mapStateToProps = state => state;
+
+// const mapDispatchToProps = (dispatch) => ({
+
+// })
+
+export default connect(mapStateToProps)(Form);

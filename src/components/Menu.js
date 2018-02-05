@@ -5,16 +5,16 @@ const Menu = () => {
 		<nav className="navigation">
 			<ul className="container">
 				<li>
-					<a href="#">Link</a>
+					<a href="http://localhost:3000/">Link</a>
 				</li>
 				<li>
-					<a href="#">Link</a>
+					<a href="http://localhost:3000/">Link</a>
 				</li>
 				<li>
-					<a href="#">Link</a>
+					<a href="http://localhost:3000/">Link</a>
 				</li>
 				<li>
-					<a href="#">Link</a>
+					<a href="http://localhost:3000/">Link</a>
 				</li>
 			</ul>
 		</nav>

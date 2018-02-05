@@ -2,8 +2,6 @@ import React from 'react';
 import Avatar from 'material-ui/Avatar';
 import GridList from 'material-ui/GridList';
 import GridTile from 'material-ui/GridList/GridTile';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
 
 const Header = () => {
 	const styles = {
@@ -24,7 +22,7 @@ const Header = () => {
 		<header className="header">
 			<GridList className="container" cellHeight={50} cols={1}>
 				<GridTile style={styles.root}>
-					<a style={styles.logo} href="#">
+					<a style={styles.logo} href="http://localhost:3000/">
 						<h1>UkrAirHotel</h1>
 					</a>
 					<div style={styles.avatar}>
