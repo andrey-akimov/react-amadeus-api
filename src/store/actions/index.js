@@ -27,3 +27,8 @@ export const chooseRadius = radius => ({
 	type: 'CHOOSE_RADIUS',
 	radius
 });
+
+export const chooseMaxPrice = maxPrice => ({
+	type: 'CHOOSE_MAX_RATE',
+	maxPrice
+});

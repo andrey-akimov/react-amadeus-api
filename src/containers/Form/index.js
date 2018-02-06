@@ -8,34 +8,6 @@ import { connect } from 'react-redux';
 import * as action from '../../store/actions';
 
 class Form extends Component {
-	// state = {
-	// 	airport: 'ODS',
-	// 	from: null,
-	// 	to: null,
-	// 	currency: 'USD',
-	// 	radius: 10
-	// };
-
-	// airportHandler = airport => {
-	// 	this.setState({ airport });
-	// };
-
-	// fromDateHandler = from => {
-	// 	this.setState({ from });
-	// };
-
-	// toDateHandler = to => {
-	// 	this.setState({ to });
-	// };
-
-	// currencyHandler = currency => {
-	// 	this.setState({ currency });
-	// };
-
-	// radiusHandler = radius => {
-	// 	this.setState({ radius });
-	// };
-
 	getRequest = () => {
 		const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
 		const { airport, from, to, currency, radius } = this.props.formOptions;
@@ -49,9 +21,11 @@ class Form extends Component {
 				&radius=${radius}
 				&currency=${currency}
 				&all_rooms=true
-				&number_of_results=10`
+				&number_of_results=99`
 			)
-			.then(res => console.log(res.data.results))
+			.then(res =>
+				this.props.dispatch(action.getHotels(res.data.results))
+			)
 			.catch(error => console.log(error));
 	};
 
@@ -65,7 +39,6 @@ class Form extends Component {
 			}
 		};
 
-		console.log(this);
 		return (
 			<div className="form">
 				<div className="container">
@@ -183,6 +156,40 @@ class Form extends Component {
 						/>
 					</DropDownMenu>
 
+					<DropDownMenu
+						value={this.props.formOptions.maxPrice}
+						style={styles.menu}
+						autoWidth={false}
+					>
+						<MenuItem
+							value={50}
+							onClick={() =>
+								this.props.dispatch(action.chooseMaxPrice(50))
+							}
+							primaryText={`50 ${
+								this.props.formOptions.currency
+							}`}
+						/>
+						<MenuItem
+							value={150}
+							onClick={() =>
+								this.props.dispatch(action.chooseMaxPrice(150))
+							}
+							primaryText={`150 ${
+								this.props.formOptions.currency
+							}`}
+						/>
+						<MenuItem
+							value={400}
+							onClick={() =>
+								this.props.dispatch(action.chooseMaxPrice(400))
+							}
+							primaryText={`400 ${
+								this.props.formOptions.currency
+							}`}
+						/>
+					</DropDownMenu>
+
 					<RaisedButton
 						label="FIND"
 						primary={true}
@@ -195,7 +202,9 @@ class Form extends Component {
 	}
 }
 
-const mapStateToProps = state => state;
+const mapStateToProps = state => ({
+	formOptions: state.formOptions
+});
 
 // const mapDispatchToProps = (dispatch) => ({
 

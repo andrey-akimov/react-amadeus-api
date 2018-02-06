@@ -5,7 +5,8 @@ const initialState = {
 		from: null,
 		to: null,
 		currency: 'USD',
-		radius: 10
+		radius: 10,
+		maxPrice: 50
 	}
 };
 
@@ -59,6 +60,15 @@ const reducer = (state = initialState, action) => {
 				formOptions: {
 					...state.formOptions,
 					radius: action.radius
+				}
+			};
+
+		case 'CHOOSE_MAX_RATE':
+			return {
+				hotels: state.hotels,
+				formOptions: {
+					...state.formOptions,
+					maxPrice: action.maxPrice
 				}
 			};
 
