@@ -6,7 +6,7 @@ const initialState = {
 		to: null,
 		currency: 'USD',
 		radius: 10,
-		maxPrice: 50
+		maxPrice: 100
 	}
 };
 
@@ -14,7 +14,9 @@ const reducer = (state = initialState, action) => {
 	switch (action.type) {
 		case 'GET_HOTELS':
 			return {
-				hotels: action.data,
+				hotels: action.data.filter(hotel => {
+					return (hotel.total_price.amount <= state.formOptions.maxPrice)	? true : false;
+				}),
 				formOptions: state.formOptions
 			};
 

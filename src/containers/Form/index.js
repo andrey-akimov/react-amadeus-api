@@ -11,7 +11,15 @@ import * as action from '../../store/actions';
 class Form extends Component {
 	getRequest = () => {
 		const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
-		const { airport, from, to, currency, radius } = this.props.formOptions;
+		const {
+			airport,
+			from,
+			to,
+			currency,
+			radius,
+			maxPrice
+		} = this.props.formOptions;
+
 		axios
 			.get(
 				`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
@@ -21,12 +29,14 @@ class Form extends Component {
 					`&check_out=${to}` +
 					`&radius=${radius}` +
 					`&currency=${currency}` +
+					`&max_rate=${maxPrice}` +
 					`&all_rooms=true` +
 					`&number_of_results=99`
 			)
-			.then(res =>
-				this.props.dispatch(action.getHotels(res.data.results))
-			)
+			.then(res => {
+				console.log(res.data.results);
+				this.props.dispatch(action.getHotels(res.data.results));
+			})
 			.catch(error => console.log(error));
 	};
 
@@ -163,29 +173,29 @@ class Form extends Component {
 						autoWidth={false}
 					>
 						<MenuItem
-							value={50}
+							value={100}
 							onClick={() =>
-								this.props.dispatch(action.chooseMaxPrice(50))
+								this.props.dispatch(action.chooseMaxPrice(100))
 							}
-							primaryText={`50 ${
+							primaryText={`100 ${
 								this.props.formOptions.currency
 							}`}
 						/>
 						<MenuItem
-							value={150}
+							value={250}
 							onClick={() =>
-								this.props.dispatch(action.chooseMaxPrice(150))
+								this.props.dispatch(action.chooseMaxPrice(250))
 							}
-							primaryText={`150 ${
+							primaryText={`250 ${
 								this.props.formOptions.currency
 							}`}
 						/>
 						<MenuItem
-							value={400}
+							value={600}
 							onClick={() =>
-								this.props.dispatch(action.chooseMaxPrice(400))
+								this.props.dispatch(action.chooseMaxPrice(600))
 							}
-							primaryText={`400 ${
+							primaryText={`600 ${
 								this.props.formOptions.currency
 							}`}
 						/>
@@ -209,9 +219,7 @@ class Form extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	formOptions: state.formOptions
-});
+const mapStateToProps = state => state;
 
 // const mapDispatchToProps = (dispatch) => ({
 

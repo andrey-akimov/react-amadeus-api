@@ -22,8 +22,6 @@ class App extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	hotels: state.hotels
-});
+const mapStateToProps = state => state;
 
 export default connect(mapStateToProps)(App);
