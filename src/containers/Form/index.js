@@ -3,6 +3,7 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
+import Toggle from 'material-ui/Toggle';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as action from '../../store/actions';
@@ -13,15 +14,15 @@ class Form extends Component {
 		const { airport, from, to, currency, radius } = this.props.formOptions;
 		axios
 			.get(
-				`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?
-				apikey=${key}
-				&location=${airport}
-				&check_in=${from}
-				&check_out=${to}
-				&radius=${radius}
-				&currency=${currency}
-				&all_rooms=true
-				&number_of_results=99`
+				`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
+					`apikey=${key}` +
+					`&location=${airport}` +
+					`&check_in=${from}` +
+					`&check_out=${to}` +
+					`&radius=${radius}` +
+					`&currency=${currency}` +
+					`&all_rooms=true` +
+					`&number_of_results=99`
 			)
 			.then(res =>
 				this.props.dispatch(action.getHotels(res.data.results))
@@ -189,6 +190,12 @@ class Form extends Component {
 							}`}
 						/>
 					</DropDownMenu>
+
+					<Toggle
+						label="Cheap first"
+						defaultToggled={true}
+						onToggle={() => console.log('TOGGLE')}
+					/>
 
 					<RaisedButton
 						label="FIND"
