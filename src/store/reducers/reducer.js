@@ -6,7 +6,7 @@ const initialState = {
 		to: null,
 		currency: 'USD',
 		radius: 10,
-		maxPrice: 100
+		maxPrice: 250
 	}
 };
 

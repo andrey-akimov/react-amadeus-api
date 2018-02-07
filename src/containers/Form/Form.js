@@ -10,28 +10,29 @@ import * as action from '../../store/actions';
 
 class Form extends Component {
 	getRequest = () => {
-		const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
-		const {
-			airport,
-			from,
-			to,
-			currency,
-			radius,
-			maxPrice
-		} = this.props.formOptions;
+		// const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
+		// const {
+		// 	airport,
+		// 	from,
+		// 	to,
+		// 	currency,
+		// 	radius,
+		// 	maxPrice
+		// } = this.props.formOptions;
 
 		axios
 			.get(
-				`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
-					`apikey=${key}` +
-					`&location=${airport}` +
-					`&check_in=${from}` +
-					`&check_out=${to}` +
-					`&radius=${radius}` +
-					`&currency=${currency}` +
-					`&max_rate=${maxPrice}` +
-					`&all_rooms=true` +
-					`&number_of_results=99`
+				// `https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
+				// 	`apikey=${key}` +
+				// 	`&location=${airport}` +
+				// 	`&check_in=${from}` +
+				// 	`&check_out=${to}` +
+				// 	`&radius=${radius}` +
+				// 	`&currency=${currency}` +
+				// 	`&max_rate=${maxPrice}` +
+				// 	`&number_of_results=99`
+
+				"https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?apikey=P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV&location=KBP&check_in=2018-02-08&check_out=2018-02-09&radius=40&lang=EN&currency=USD&number_of_results=80&all_rooms=false&show_sold_out=false"
 			)
 			.then(res => {
 				console.log(res.data.results);
