@@ -6,20 +6,21 @@ class HotelsList extends Component {
 	state = {
 		pages: [],
 		hotels: [],
-		hotelsData: []
+		hotelsData: [],
+		currentPage: 1
 	}
 
 	paginationHandler = (page) => {
-		console.log(page)
-		// this.setState((prevState, props) => {
-		// 	return {
-		// 		hotelsData: this.props
-		// 	}
-		// });
+		this.setState((prevState, props) => {
+			return {
+				hotelsData: props.hotels.slice(prevState.hotels[page - 1].from, prevState.hotels[page - 1].to + 1),
+				currentPage: page
+			}
+		});
 	}
 
 	componentWillReceiveProps (nextProps) {
-
+		console.log(nextProps)
 		// pagination
 		if (nextProps.hotels !== null || _.difference(this.props.hotels, nextProps.hotels).length > 0) {
 			const totalPages = Math.ceil(nextProps.hotels.length / 10);
@@ -50,15 +51,15 @@ class HotelsList extends Component {
 	}	
 
 	render(){
+		console.log('*******************')
 		return (
 			<div>
-				
 				{(this.state.hotelsData !== null && this.state.pages.length > 1)
 					? this.state.pages.map(
 							page => (
 								<span 
 									onClick={() => this.paginationHandler(page)}
-									className="pagination"
+									className={page === this.state.currentPage ? "pagination active" : "pagination"}
 									key={_.uniqueId()}
 								>
 									{page}
