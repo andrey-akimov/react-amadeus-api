@@ -19,12 +19,12 @@
 	justify-content: space-around;
 }
 
-/* .navigation li {
-	align-self: center;
-} */
-
 .form {
 	width: 100%;
 	margin-top: 100px;
 	border: 1px solid #888888;
+}
+
+.pagination{
+	padding: 0 20px;
 }

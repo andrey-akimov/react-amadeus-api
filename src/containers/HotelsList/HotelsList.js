@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
+import * as _ from 'lodash';
 import Hotel from '../../components/Hotel';
 
 class HotelsList extends Component {
-	render(){
-		console.log(this.props);
+	state = {
+		pages: [],
+		hotels: [],
+		hotelsData: []
+	}
 
-		// PAGINATION
-		let totalPages = null;
-		let currentHotels = null;
-		if (this.props.hotels !== null) {
-			totalPages = Math.ceil(this.props.hotels.length / 10);
-			currentHotels = pageNum => {
+	paginationHandler = (page) => {
+		console.log(page)
+		// this.setState((prevState, props) => {
+		// 	return {
+		// 		hotelsData: this.props
+		// 	}
+		// });
+	}
+
+	componentWillReceiveProps (nextProps) {
+
+		// pagination
+		if (nextProps.hotels !== null || _.difference(this.props.hotels, nextProps.hotels).length > 0) {
+			const totalPages = Math.ceil(nextProps.hotels.length / 10);
+			const currentHotels = pageNum => {
 				const pagination = {
 					pages: [],
 					hotels: []
@@ -24,20 +37,38 @@ class HotelsList extends Component {
 						to
 					});
 				}
-				return pagination;
+				this.setState((prevState, props) => {
+					return {
+						...pagination,
+						hotelsData: nextProps.hotels.slice(pagination.hotels[0].from, pagination.hotels[0].to + 1)
+						// ^^^ change this later ^^^
+					}
+				});
 			}
+			currentHotels(totalPages);
 		}
-		// PAGINATION
+	}	
 
+	render(){
 		return (
 			<div>
-				{(this.props.hotels !== null && totalPages > 1)
-					? console.log(currentHotels(totalPages))
+				
+				{(this.state.hotelsData !== null && this.state.pages.length > 1)
+					? this.state.pages.map(
+							page => (
+								<span 
+									onClick={() => this.paginationHandler(page)}
+									className="pagination"
+									key={_.uniqueId()}
+								>
+									{page}
+								</span>
+						))
 					: null}
-				{(this.props.hotels !== null && totalPages < 1)
-					? this.props.hotels.map(
+
+				{(this.state.hotelsData !== null)
+					? this.state.hotelsData.map(
 							hotel => <Hotel key={hotel.property_code} {...hotel} />
-							// console.log(hotel)
 						)
 					: null}
 			</div>

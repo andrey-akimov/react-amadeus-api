@@ -3,7 +3,6 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
-import Toggle from 'material-ui/Toggle';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as action from '../../store/actions';
@@ -34,10 +33,7 @@ class Form extends Component {
 
 				"https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?apikey=P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV&location=KBP&check_in=2018-02-08&check_out=2018-02-09&radius=40&lang=EN&currency=USD&number_of_results=80&all_rooms=false&show_sold_out=false"
 			)
-			.then(res => {
-				console.log(res.data.results);
-				this.props.dispatch(action.getHotels(res.data.results));
-			})
+			.then(res => this.props.dispatch(action.getHotels(res.data.results)))
 			.catch(error => console.log(error));
 	};
 
@@ -201,12 +197,6 @@ class Form extends Component {
 							}`}
 						/>
 					</DropDownMenu>
-
-					<Toggle
-						label="Cheap first"
-						defaultToggled={true}
-						onToggle={() => console.log('TOGGLE')}
-					/>
 
 					<RaisedButton
 						label="FIND"
