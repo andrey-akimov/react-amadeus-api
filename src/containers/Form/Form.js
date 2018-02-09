@@ -8,6 +8,39 @@ import { connect } from 'react-redux';
 import * as action from '../../store/actions';
 
 class Form extends Component {
+	state = {
+		airport: 'ODS',
+		from: null,
+		to: null,
+		currency: 'USD',
+		radius: 10,
+		maxPrice: 250
+	}
+
+	airportHandler = airport => {
+		this.setState({airport});
+	}
+
+	fromDateHandler = from => {
+		this.setState({from});
+	}
+
+	toDateHandler = to => {
+		this.setState({to});
+	}
+
+	currencyHandler = currency => {
+		this.setState({currency});
+	}
+
+	radiusHandler = radius => {
+		this.setState({radius});
+	}
+
+	maxPriceHandler = maxPrice => {
+		this.setState({maxPrice});
+	}
+
 	getRequest = () => {
 		const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
 		const {
@@ -17,7 +50,7 @@ class Form extends Component {
 			currency,
 			radius,
 			maxPrice
-		} = this.props.formOptions;
+		} = this.state;
 
 		axios
 			.get(
@@ -33,7 +66,14 @@ class Form extends Component {
 
 				// "https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?apikey=P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV&location=KBP&check_in=2018-02-08&check_out=2018-02-09&radius=40&lang=EN&currency=USD&number_of_results=80&all_rooms=false&show_sold_out=false"
 			)
-			.then(res => this.props.dispatch(action.getHotels(res.data.results)))
+			.then(res => {
+				
+				const filteredHotels = res.data.results.filter(hotel => {
+					return (hotel.total_price.amount <= this.state.maxPrice) ? true : false;
+				})
+				this.props.dispatch(action.getHotels(filteredHotels))
+			}
+			)
 			.catch(error => console.log(error));
 	};
 
@@ -51,28 +91,28 @@ class Form extends Component {
 			<div className="form">
 				<div className="container">
 					<DropDownMenu
-						value={this.props.formOptions.airport}
+						value={this.state.airport}
 						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
 							value="ODS"
 							onClick={() =>
-								this.props.dispatch(action.chooseAirport('ODS'))
+								this.airportHandler('ODS')
 							}
 							primaryText="Odessa"
 						/>
 						<MenuItem
 							value="KBP"
 							onClick={() =>
-								this.props.dispatch(action.chooseAirport('KBP'))
+								this.airportHandler('KBP')
 							}
 							primaryText="Kiev"
 						/>
 						<MenuItem
 							value="LWO"
 							onClick={() =>
-								this.props.dispatch(action.chooseAirport('LWO'))
+								this.airportHandler('LWO')
 							}
 							primaryText="Lviv"
 						/>
@@ -82,11 +122,9 @@ class Form extends Component {
 						hintText="From"
 						ref="from"
 						onChange={() =>
-							this.props.dispatch(
-								action.chooseFromDate(
+							this.fromDateHandler(
 									this.refs.from.refs.input.props.value
 								)
-							)
 						}
 					/>
 
@@ -94,16 +132,14 @@ class Form extends Component {
 						hintText="To"
 						ref="to"
 						onChange={() =>
-							this.props.dispatch(
-								action.chooseToDate(
+							this.toDateHandler(
 									this.refs.to.refs.input.props.value
 								)
-							)
 						}
 					/>
 
 					<DropDownMenu
-						value={this.props.formOptions.currency}
+						value={this.state.currency}
 						style={styles.menu}
 						autoWidth={false}
 					>
@@ -111,89 +147,83 @@ class Form extends Component {
 							value="USD"
 							primaryText="USD"
 							onClick={() =>
-								this.props.dispatch(
-									action.chooseCurrency('USD')
-								)
+								this.currencyHandler('USD')
 							}
 						/>
 						<MenuItem
 							value="EUR"
 							primaryText="EUR"
 							onClick={() =>
-								this.props.dispatch(
-									action.chooseCurrency('EUR')
-								)
+								this.currencyHandler('EUR')
 							}
 						/>
 						<MenuItem
 							value="UAH"
 							primaryText="UAH"
 							onClick={() =>
-								this.props.dispatch(
-									action.chooseCurrency('UAH')
-								)
+								this.currencyHandler('UAH')
 							}
 						/>
 					</DropDownMenu>
 
 					<DropDownMenu
-						value={this.props.formOptions.radius}
+						value={this.state.radius}
 						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
 							value={10}
 							onClick={() =>
-								this.props.dispatch(action.chooseRadius(10))
+								this.radiusHandler(10)
 							}
 							primaryText="10 km"
 						/>
 						<MenuItem
 							value={25}
 							onClick={() =>
-								this.props.dispatch(action.chooseRadius(25))
+								this.radiusHandler(25)
 							}
 							primaryText="25 km"
 						/>
 						<MenuItem
 							value={40}
 							onClick={() =>
-								this.props.dispatch(action.chooseRadius(40))
+								this.radiusHandler(40)
 							}
 							primaryText="40 km"
 						/>
 					</DropDownMenu>
 
 					<DropDownMenu
-						value={this.props.formOptions.maxPrice}
+						value={this.state.maxPrice}
 						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
 							value={100}
 							onClick={() =>
-								this.props.dispatch(action.chooseMaxPrice(100))
+								this.maxPriceHandler(100)
 							}
 							primaryText={`100 ${
-								this.props.formOptions.currency
+								this.state.currency
 							}`}
 						/>
 						<MenuItem
 							value={250}
 							onClick={() =>
-								this.props.dispatch(action.chooseMaxPrice(250))
+								this.maxPriceHandler(250)
 							}
 							primaryText={`250 ${
-								this.props.formOptions.currency
+								this.state.currency
 							}`}
 						/>
 						<MenuItem
 							value={600}
 							onClick={() =>
-								this.props.dispatch(action.chooseMaxPrice(600))
+								this.maxPriceHandler(600)
 							}
 							primaryText={`600 ${
-								this.props.formOptions.currency
+								this.state.currency
 							}`}
 						/>
 					</DropDownMenu>
