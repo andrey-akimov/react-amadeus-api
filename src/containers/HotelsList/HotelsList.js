@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as _ from 'lodash';
+import CircularProgress from 'material-ui/CircularProgress';
 import Hotel from '../../components/Hotel';
 
 class HotelsList extends Component {
@@ -75,6 +76,10 @@ class HotelsList extends Component {
 							</span>
 					))
 				: null
+		}
+
+		if(this.props.loading) {
+			return <CircularProgress size={80} thickness={5} />
 		}
 
 		return (

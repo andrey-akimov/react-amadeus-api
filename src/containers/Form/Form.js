@@ -36,6 +36,7 @@ class Form extends Component {
 			(dateFrom.getDate() >= date.getDate()) && (dateFrom.getMonth() >= date.getMonth()) &&
 			(dateTo.getDate() >= dateFrom.getDate()) && (dateTo.getMonth() >= dateFrom.getMonth())
 		){
+			this.props.dispatch(action.loading());
 			axios
 				.get(
 					`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
@@ -228,7 +229,7 @@ class Form extends Component {
 					<Snackbar
 						open={this.state.isOpen}
 						message="Entered date is not correct. Please check the form."
-						autoHideDuration={3000}
+						autoHideDuration={4000}
 						onRequestClose={this.handleRequestClose}
 					/>
 				</div>

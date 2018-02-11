@@ -32,3 +32,7 @@ export const chooseMaxPrice = maxPrice => ({
 	type: 'CHOOSE_MAX_RATE',
 	maxPrice
 });
+
+export const loading = () => ({
+	type: 'LOADING'
+});
