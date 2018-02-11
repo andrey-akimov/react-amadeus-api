@@ -79,8 +79,6 @@ class Form extends Component {
 						`&currency=${currency}` +
 						`&max_rate=${maxPrice}` +
 						`&number_of_results=99`
-	
-					// "https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?apikey=P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV&location=KBP&check_in=2018-02-08&check_out=2018-02-09&radius=40&lang=EN&currency=USD&number_of_results=80&all_rooms=false&show_sold_out=false"
 				)
 				.then(res => {
 					const filteredDada = res.data.results.filter(hotel => {

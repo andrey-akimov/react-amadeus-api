@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as _ from 'lodash';
 import CircularProgress from 'material-ui/CircularProgress';
 import Hotel from '../../components/Hotel';
+import './style.css';
 
 class HotelsList extends Component {
 	state = {
@@ -62,7 +63,6 @@ class HotelsList extends Component {
 	}	
 
 	render(){
-
 		const printPagination = () => {
 			return (this.state.hotelsData !== null && this.state.pages.length > 1)
 				? this.state.pages.map(
@@ -83,7 +83,7 @@ class HotelsList extends Component {
 		}
 
 		return (
-			<div>
+			<div className="hotels-list">
 				{printPagination()}
 
 				{(this.state.hotelsData !== null)
