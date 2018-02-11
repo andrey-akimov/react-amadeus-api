@@ -13,7 +13,7 @@ class App extends Component {
 				<div className="App">
 					<Header />
 					<Form />
-					<HotelsList hotels={this.props.hotels} />
+					<HotelsList />
 				</div>
 			</MuiThemeProvider>
 		);

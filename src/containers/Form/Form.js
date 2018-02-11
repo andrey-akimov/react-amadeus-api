@@ -5,9 +5,18 @@ import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import Snackbar from 'material-ui/Snackbar';
 import * as action from '../../store/actions';
 
 class Form extends Component {
+	state = {
+		isOpen: false
+	}
+
+	handleRequestClose = () => {
+		this.setState({isOpen: false});
+	}
+
 	getRequest = () => {
 		const key = 'P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV';
 		const {
@@ -18,23 +27,34 @@ class Form extends Component {
 			radius,
 			maxPrice
 		} = this.props.formOptions;
+		const date = new Date();
+		const dateFrom = new Date(from);
+		const dateTo = new Date(to);
 
-		axios
-			.get(
-				`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
-					`apikey=${key}` +
-					`&location=${airport}` +
-					`&check_in=${from}` +
-					`&check_out=${to}` +
-					`&radius=${radius}` +
-					`&currency=${currency}` +
-					`&max_rate=${maxPrice}` +
-					`&number_of_results=99`
-
-				// "https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?apikey=P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV&location=KBP&check_in=2018-02-08&check_out=2018-02-09&radius=40&lang=EN&currency=USD&number_of_results=80&all_rooms=false&show_sold_out=false"
-			)
-			.then(res => this.props.dispatch(action.getHotels(res.data.results)))
-			.catch(error => console.log(error));
+		// Form validation
+		if(
+			(dateFrom.getDate() >= date.getDate()) && (dateFrom.getMonth() >= date.getMonth()) &&
+			(dateTo.getDate() >= dateFrom.getDate()) && (dateTo.getMonth() >= dateFrom.getMonth())
+		){
+			axios
+				.get(
+					`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
+						`apikey=${key}` +
+						`&location=${airport}` +
+						`&check_in=${from}` +
+						`&check_out=${to}` +
+						`&radius=${radius}` +
+						`&currency=${currency}` +
+						`&max_rate=${maxPrice}` +
+						`&number_of_results=99`
+	
+					// "https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?apikey=P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV&location=KBP&check_in=2018-02-08&check_out=2018-02-09&radius=40&lang=EN&currency=USD&number_of_results=80&all_rooms=false&show_sold_out=false"
+				)
+				.then(res => this.props.dispatch(action.getHotels(res.data.results)))
+				.catch(error => console.log(error));
+		} else {
+			this.setState({isOpen: true});
+		}
 	};
 
 	render() {
@@ -203,6 +223,13 @@ class Form extends Component {
 						primary={true}
 						style={styles.btn}
 						onClick={this.getRequest}
+					/>
+					
+					<Snackbar
+						open={this.state.isOpen}
+						message="Entered date is not correct. Please check the form."
+						autoHideDuration={3000}
+						onRequestClose={this.handleRequestClose}
 					/>
 				</div>
 			</div>
