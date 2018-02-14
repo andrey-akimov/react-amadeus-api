@@ -11,8 +11,10 @@ class App extends Component {
 		return (
 			<MuiThemeProvider>
 				<div className="App">
-					<Header />
-					<Form />
+					<div className="main">
+						<Header />
+						<Form />
+					</div>
 					<HotelsList />
 				</div>
 			</MuiThemeProvider>

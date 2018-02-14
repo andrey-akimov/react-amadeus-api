@@ -7,6 +7,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar';
 import * as action from '../../store/actions';
+import './style.css'
 
 class Form extends Component {
 	state = {
@@ -29,7 +30,6 @@ class Form extends Component {
 
 	fromDateHandler = (from) => {
 		this.setState({ from });
-		
 	}
 
 	toDateHandler = (to) => {
@@ -93,21 +93,12 @@ class Form extends Component {
 	};
 
 	render() {
-		const styles = {
-			menu: {
-				width: '150px'
-			},
-			btn: {
-				margin: 12
-			}
-		};
-
 		return (
 			<div className="form">
 				<div className="container">
 					<DropDownMenu
+						className="form__drop-down"
 						value={this.state.airport}
-						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
@@ -133,47 +124,9 @@ class Form extends Component {
 						/>
 					</DropDownMenu>
 
-					<DatePicker
-						hintText="From"
-						ref="from"
-						onChange={() =>
-							this.fromDateHandler(this.refs.from.refs.input.props.value)
-						}
-					/>
-
-					<DatePicker
-						hintText="To"
-						ref="to"
-						onChange={() =>
-							this.toDateHandler(this.refs.to.refs.input.props.value)
-						}
-					/>
-
 					<DropDownMenu
-						value={this.state.currency}
-						style={styles.menu}
-						autoWidth={false}
-					>
-						<MenuItem
-							value="USD"
-							primaryText="USD"
-							onClick={() => this.currencyHandler('USD')}
-						/>
-						<MenuItem
-							value="EUR"
-							primaryText="EUR"
-							onClick={() => this.currencyHandler('EUR')}
-						/>
-						<MenuItem
-							value="UAH"
-							primaryText="UAH"
-							onClick={() => this.currencyHandler('UAH')}
-						/>
-					</DropDownMenu>
-
-					<DropDownMenu
+						className="form__drop-down"
 						value={this.state.radius}
-						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
@@ -193,9 +146,27 @@ class Form extends Component {
 						/>
 					</DropDownMenu>
 
+					<DatePicker
+						className="form__date-piker"
+						hintText="From"
+						ref="from"
+						onChange={() =>
+							this.fromDateHandler(this.refs.from.refs.input.props.value)
+						}
+					/>
+
+					<DatePicker
+						className="form__date-piker"
+						hintText="To"
+						ref="to"
+						onChange={() =>
+							this.toDateHandler(this.refs.to.refs.input.props.value)
+						}
+					/>
+
 					<DropDownMenu
+						className="form__drop-down"
 						value={this.state.maxPrice}
-						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
@@ -215,14 +186,37 @@ class Form extends Component {
 						/>
 					</DropDownMenu>
 
+					<DropDownMenu
+						className="form__drop-down"
+						value={this.state.currency}
+						autoWidth={false}
+					>
+						<MenuItem
+							value="USD"
+							primaryText="USD"
+							onClick={() => this.currencyHandler('USD')}
+						/>
+						<MenuItem
+							value="EUR"
+							primaryText="EUR"
+							onClick={() => this.currencyHandler('EUR')}
+						/>
+						<MenuItem
+							value="UAH"
+							primaryText="UAH"
+							onClick={() => this.currencyHandler('UAH')}
+						/>
+					</DropDownMenu>
+
 					<RaisedButton
+						className="search-button"
 						label="FIND"
 						primary={true}
-						style={styles.btn}
 						onClick={this.getRequest}
 					/>
 					
 					<Snackbar
+						className="snackbar"
 						open={this.state.snackbarOpen}
 						message="Entered date is not correct. Please check the form."
 						autoHideDuration={4000}
@@ -235,9 +229,5 @@ class Form extends Component {
 }
 
 const mapStateToProps = state => state;
-
-// const mapDispatchToProps = (dispatch) => ({
-
-// })
 
 export default connect(mapStateToProps)(Form);

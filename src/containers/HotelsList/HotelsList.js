@@ -65,7 +65,8 @@ class HotelsList extends Component {
 	render(){
 		const printPagination = () => {
 			return (this.state.hotelsData !== null && this.state.pages.length > 1)
-				? this.state.pages.map(
+				? <div className="pagination-list">
+					{this.state.pages.map(
 						page => (
 							<span 
 								onClick={() => this.paginationHandler(page)}
@@ -74,12 +75,13 @@ class HotelsList extends Component {
 							>
 								{page}
 							</span>
-					))
+					))}
+					</div>
 				: null
 		}
 
 		if(this.props.loading) {
-			return <CircularProgress size={80} thickness={5} />
+			return <CircularProgress className="spinner" size={80} thickness={5} />
 		}
 
 		return (
@@ -92,7 +94,11 @@ class HotelsList extends Component {
 						)
 					: null}
 
-				{this.state.isEmptyData === true ? <h1>There is no hotels for such request...</h1> : null}
+				{
+					this.state.isEmptyData === true
+					? <h2 className="empty-request">There is no hotels for such request...</h2>
+					: null
+				}
 
 				{printPagination()}
 			</div>

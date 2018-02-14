@@ -15,34 +15,37 @@ const Hotel = props => {
 		`&key=${key}`;
 
 	const styles = {
-		width: '400px',
-		margin: '20px auto'
+		phoneNum:{
+			fontSize: '18px'
+		},
+		phoneBlock:{
+			paddingTop: '0'
+		}
 	}
 
 	return (
-		<Card style={styles}>
-			<CardMedia
-				overlay={<CardTitle title={props.property_name} subtitle={props.address.line1} />}
+		<Card className="card">
+			<CardMedia overlay={
+				<CardTitle
+					className="card-title"
+					title={props.property_name.length <= 30
+						? props.property_name
+						: props.property_name.slice(0, 30) + '...'
+					}
+					subtitle={props.address.line1}
+				/>
+			}
 			>
 			<img
 				src={
 					// There are no pictures in the API :(
 					props.images.length < 1 
-					? "http://fakeimg.pl/350x200/?text=No+photo&font=lobster" 
+					? "http://fakeimg.pl/350x200/?text=No+photo" 
 					: props.images[0]
 				}
 				alt="photos"
 			/>
 			</CardMedia>
-
-			<CardTitle 
-				title={_.uniq(props.contacts).map((contact, i, arr) => (
-					<span key={_.uniqueId()}>
-						{contact.detail}
-						{(arr.length - 1 === i) ? null : ', '}
-					</span>
-				))}
-			/>
 
 			<CardText>
 				Description: {props.amenities.map((amenity, i, arr) => (
@@ -65,6 +68,16 @@ const Hotel = props => {
 					{props.total_price.currency}
 				</p>
 			</CardText>
+
+			<CardTitle
+				style={styles.phoneBlock}
+				title={_.uniq(props.contacts).map((contact, i, arr) => (
+					<span style={styles.phoneNum} key={_.uniqueId()}>
+						{contact.detail}
+						{(arr.length - 1 === i) ? null : ', '}
+					</span>
+				))}
+			/>
 
 			<CardActions>
 				<FlatButton 
