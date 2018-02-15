@@ -20,6 +20,17 @@ class Form extends Component {
 		maxPrice: 250
 	}
 
+	// SCU
+	shouldComponentUpdate(nextProps, nextState) {
+		let needReload = false;
+		for (const key in this.state) {
+			if (this.state[key] !== nextState[key]) {
+				needReload = true;
+			}
+		}
+		return needReload;
+	}
+
 	handleRequestClose = () => {
 		this.setState({ snackbarOpen: false });
 	}

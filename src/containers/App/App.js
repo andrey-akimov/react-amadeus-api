@@ -7,6 +7,11 @@ import './App.css';
 import { connect } from 'react-redux';
 
 class App extends Component {
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return false;
+	}
+	
 	render() {
 		return (
 			<MuiThemeProvider>
