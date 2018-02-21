@@ -1,5 +1,6 @@
 const initialState = {
-	hotels: null
+	hotels: null,
+	loading: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -7,63 +8,15 @@ const reducer = (state = initialState, action) => {
 		case 'GET_HOTELS':
 			return {
 				hotels: action.data,
-				formOptions: state.formOptions
+				loading: false
 			};
 
-		// case 'CHOOSE_AIRPORT':
-		// 	return {
-		// 		hotels: state.hotels,
-		// 		formOptions: {
-		// 			...state.formOptions,
-		// 			airport: action.airport
-		// 		}
-		// 	};
-
-		// case 'CHOOSE_FROM_DATE':
-		// 	return {
-		// 		hotels: state.hotels,
-		// 		formOptions: {
-		// 			...state.formOptions,
-		// 			from: action.from
-		// 		}
-		// 	};
-
-		// case 'CHOOSE_TO_DATE':
-		// 	return {
-		// 		hotels: state.hotels,
-		// 		formOptions: {
-		// 			...state.formOptions,
-		// 			to: action.to
-		// 		}
-		// 	};
-
-		// case 'CHOOSE_CURRENCY':
-		// 	return {
-		// 		hotels: state.hotels,
-		// 		formOptions: {
-		// 			...state.formOptions,
-		// 			currency: action.currency
-		// 		}
-		// 	};
-
-		// case 'CHOOSE_RADIUS':
-		// 	return {
-		// 		hotels: state.hotels,
-		// 		formOptions: {
-		// 			...state.formOptions,
-		// 			radius: action.radius
-		// 		}
-		// 	};
-
-		// case 'CHOOSE_MAX_RATE':
-		// 	return {
-		// 		hotels: state.hotels,
-		// 		formOptions: {
-		// 			...state.formOptions,
-		// 			maxPrice: action.maxPrice
-		// 		}
-		// 	};
-
+		case 'LOADING':
+		return {
+			...state,
+			loading: true
+		};
+			
 		default:
 			return state;
 	}

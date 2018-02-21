@@ -2,33 +2,76 @@
 	box-sizing: border-box;
 }
 
+body{
+	min-width: 360px;
+}
+
 .container {
+	display: flex;
+	height: 100%;
+	justify-content: space-between;
+	align-items: center;
 	max-width: 1200px;
 	margin: 0 auto !important;
-	border: 1px solid #888888;
+	flex-flow: row wrap;
 }
 
 .header {
-	background-color: #eeeeee;
+	height: 50px;
+    background-color: rgba(0, 0, 0, .1);
 }
 
-.navigation ul {
-	list-style: none;
-	padding: 0;
-	display: flex;
-	justify-content: space-around;
+.logo{
+	text-decoration: none;
+	color: #fff;
+	transition: all .2s;
 }
 
-.form {
+.logo:hover{
+	color: rgb(0, 188, 212);
+}
+
+.logo:active{
+	color: aqua;
+}
+
+.avatar{
+	align-self: center;
+}
+
+.main{
+	background-image: url('../../img/travel.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	padding-bottom: 100px;
+}
+
+.card{
+	flex-basis: 480px;
+	flex-grow: 0;
+	flex-shrink: 0;
+	margin: 20px 0;
+}
+
+.card > div {
+	padding-bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.card > div > div > a{
 	width: 100%;
-	margin-top: 100px;
-	border: 1px solid #888888;
 }
 
-.pagination{
-	padding: 0 20px;
+.card-title{
+	padding: 0 10px 10px 10px !important;
 }
 
-.pagination.active{
-	color: red;
+@media screen and (max-width: 600px) {
+	.card{
+		flex-basis: 96%;
+	}
 }

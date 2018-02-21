@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import * as _ from 'lodash';
+import CircularProgress from 'material-ui/CircularProgress';
 import Hotel from '../../components/Hotel';
+import './style.css';
 
 class HotelsList extends Component {
 	state = {
 		pages: [],
 		hotels: [],
 		hotelsData: [],
-		currentPage: 1
+		currentPage: 1,
+		isEmptyData: null
 	}
 
 	paginationHandler = (page) => {
@@ -20,61 +24,88 @@ class HotelsList extends Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		console.log(nextProps)
+		
 		// pagination
-		if (nextProps.hotels !== null || _.difference(this.props.hotels, nextProps.hotels).length > 0) {
-			const totalPages = Math.ceil(nextProps.hotels.length / 10);
-			const currentHotels = pageNum => {
-				const pagination = {
-					pages: [],
-					hotels: []
-				}
-				for (let index = 1; index <= totalPages; index++) {
-					let from = (index - 1) * 10;
-					let to = index * 10 - 1;
-					pagination.pages.push(index);
-					pagination.hotels.push({
-						from,
-						to
-					});
-				}
-				this.setState((prevState, props) => {
-					return {
-						...pagination,
-						hotelsData: nextProps.hotels.slice(pagination.hotels[0].from, pagination.hotels[0].to + 1)
-						// ^^^ change this later ^^^
-					}
+		const currentHotels = (numberOfPages, data) => {
+			const pagination = {
+				pages: [],
+				hotels: []
+			}
+			for (let index = 1; index <= numberOfPages; index++) {
+				let from = (index - 1) * 10;
+				let to = index * 10 - 1;
+				pagination.pages.push(index);
+				pagination.hotels.push({
+					from,
+					to
 				});
 			}
-			currentHotels(totalPages);
+			this.setState((prevState, props) => {
+				return {
+					...pagination,
+					hotelsData: data.hotels.length !== 0
+					? data.hotels.slice(pagination.hotels[0].from, pagination.hotels[0].to + 1)
+					: [],
+					currentPage: 1,
+					isEmptyData: data.hotels.length === 0
+				}
+			});
+		}
+
+		if (nextProps.hotels !== null && _.difference(nextProps.hotels, this.props.hotels).length > 0) {
+			const totalPages = Math.ceil(nextProps.hotels.length / 10);
+			currentHotels(totalPages, nextProps);
+		}
+
+		else if(nextProps.hotels !== null && nextProps.hotels.length === 0){
+			currentHotels(0, nextProps);
 		}
 	}	
 
 	render(){
-		console.log('*******************')
+		const printPagination = () => {
+			return (this.state.hotelsData !== null && this.state.pages.length > 1)
+				? <div className="pagination-list">
+					{this.state.pages.map(
+						page => (
+							<span 
+								onClick={() => this.paginationHandler(page)}
+								className={page === this.state.currentPage ? "pagination active" : "pagination"}
+								key={_.uniqueId()}
+							>
+								{page}
+							</span>
+					))}
+					</div>
+				: null
+		}
+
+		if(this.props.loading) {
+			return <CircularProgress className="spinner" size={80} thickness={5} />
+		}
+
 		return (
-			<div>
-				{(this.state.hotelsData !== null && this.state.pages.length > 1)
-					? this.state.pages.map(
-							page => (
-								<span 
-									onClick={() => this.paginationHandler(page)}
-									className={page === this.state.currentPage ? "pagination active" : "pagination"}
-									key={_.uniqueId()}
-								>
-									{page}
-								</span>
-						))
-					: null}
+			<div className="hotels-list">
+				{printPagination()}
 
 				{(this.state.hotelsData !== null)
 					? this.state.hotelsData.map(
 							hotel => <Hotel key={hotel.property_code} {...hotel} />
 						)
 					: null}
+
+				{
+					this.state.isEmptyData === true
+					? <h2 className="empty-request">There is no hotels for such request...</h2>
+					: null
+				}
+
+				{printPagination()}
 			</div>
 		);
 	}
 };
 
-export default HotelsList;
+const mapStateToProps = state => state;
+
+export default connect(mapStateToProps)(HotelsList);

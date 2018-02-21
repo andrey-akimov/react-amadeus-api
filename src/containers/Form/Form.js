@@ -5,10 +5,13 @@ import DatePicker from 'material-ui/DatePicker';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import Snackbar from 'material-ui/Snackbar';
 import * as action from '../../store/actions';
+import './style.css'
 
 class Form extends Component {
 	state = {
+		snackbarOpen: false,
 		airport: 'ODS',
 		from: null,
 		to: null,
@@ -17,28 +20,43 @@ class Form extends Component {
 		maxPrice: 250
 	}
 
-	airportHandler = airport => {
-		this.setState({airport});
+	// SCU
+	shouldComponentUpdate(nextProps, nextState) {
+		let needReload = false;
+		for (const key in this.state) {
+			if (this.state[key] !== nextState[key]) {
+				needReload = true;
+			}
+		}
+		return needReload;
 	}
 
-	fromDateHandler = from => {
-		this.setState({from});
+	handleRequestClose = () => {
+		this.setState({ snackbarOpen: false });
+	}
+	
+	airportHandler = (airport) => {
+		this.setState({ airport });
 	}
 
-	toDateHandler = to => {
-		this.setState({to});
+	fromDateHandler = (from) => {
+		this.setState({ from });
 	}
 
-	currencyHandler = currency => {
-		this.setState({currency});
+	toDateHandler = (to) => {
+		this.setState({ to });
 	}
 
-	radiusHandler = radius => {
-		this.setState({radius});
+	currencyHandler = (currency) => {
+		this.setState({ currency });
 	}
 
-	maxPriceHandler = maxPrice => {
-		this.setState({maxPrice});
+	radiusHandler = (radius) => {
+		this.setState({ radius });
+	}
+
+	maxPriceHandler = (maxPrice) => {
+		this.setState({ maxPrice });
 	}
 
 	getRequest = () => {
@@ -51,48 +69,47 @@ class Form extends Component {
 			radius,
 			maxPrice
 		} = this.state;
+		const date = new Date();
+		const dateFrom = new Date(from);
+		const dateTo = new Date(to);
 
-		axios
-			.get(
-				`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
-					`apikey=${key}` +
-					`&location=${airport}` +
-					`&check_in=${from}` +
-					`&check_out=${to}` +
-					`&radius=${radius}` +
-					`&currency=${currency}` +
-					`&max_rate=${maxPrice}` +
-					`&number_of_results=99`
-
-				// "https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?apikey=P5fJmQPZtRB9ebjzbloTHzZcipxAqdaV&location=KBP&check_in=2018-02-08&check_out=2018-02-09&radius=40&lang=EN&currency=USD&number_of_results=80&all_rooms=false&show_sold_out=false"
-			)
-			.then(res => {
-				
-				const filteredHotels = res.data.results.filter(hotel => {
-					return (hotel.total_price.amount <= this.state.maxPrice) ? true : false;
+		// Form validation
+		if(
+			(dateFrom.getDate() >= date.getDate()) && (dateFrom.getMonth() >= date.getMonth()) &&
+			(dateTo.getDate() >= dateFrom.getDate()) && (dateTo.getMonth() >= dateFrom.getMonth())
+		){
+			this.props.dispatch(action.loading());
+			axios
+				.get(
+					`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
+						`apikey=${key}` +
+						`&location=${airport}` +
+						`&check_in=${from}` +
+						`&check_out=${to}` +
+						`&radius=${radius}` +
+						`&currency=${currency}` +
+						`&max_rate=${maxPrice}` +
+						`&number_of_results=99`
+				)
+				.then(res => {
+					const filteredDada = res.data.results.filter(hotel => {
+						return (hotel.total_price.amount <= this.state.maxPrice) ? true : false;
+					});
+					this.props.dispatch(action.getHotels(filteredDada));
 				})
-				this.props.dispatch(action.getHotels(filteredHotels))
-			}
-			)
-			.catch(error => console.log(error));
+				.catch(error => console.log(error));
+		} else {
+			this.setState({snackbarOpen: true});
+		}
 	};
 
 	render() {
-		const styles = {
-			menu: {
-				width: '150px'
-			},
-			btn: {
-				margin: 12
-			}
-		};
-
 		return (
 			<div className="form">
 				<div className="container">
 					<DropDownMenu
+						className="form__drop-down"
 						value={this.state.airport}
-						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
@@ -118,121 +135,103 @@ class Form extends Component {
 						/>
 					</DropDownMenu>
 
+					<DropDownMenu
+						className="form__drop-down"
+						value={this.state.radius}
+						autoWidth={false}
+					>
+						<MenuItem
+							value={10}
+							onClick={() => this.radiusHandler(10)}
+							primaryText="10 km"
+						/>
+						<MenuItem
+							value={25}
+							onClick={() => this.radiusHandler(25)}
+							primaryText="25 km"
+						/>
+						<MenuItem
+							value={40}
+							onClick={() => this.radiusHandler(40)}
+							primaryText="40 km"
+						/>
+					</DropDownMenu>
+
 					<DatePicker
+						className="form__date-piker"
 						hintText="From"
 						ref="from"
 						onChange={() =>
-							this.fromDateHandler(
-									this.refs.from.refs.input.props.value
-								)
+							this.fromDateHandler(this.refs.from.refs.input.props.value)
 						}
 					/>
 
 					<DatePicker
+						className="form__date-piker"
 						hintText="To"
 						ref="to"
 						onChange={() =>
-							this.toDateHandler(
-									this.refs.to.refs.input.props.value
-								)
+							this.toDateHandler(this.refs.to.refs.input.props.value)
 						}
 					/>
 
 					<DropDownMenu
+						className="form__drop-down"
+						value={this.state.maxPrice}
+						autoWidth={false}
+					>
+						<MenuItem
+							value={100}
+							onClick={() => this.maxPriceHandler(100)}
+							primaryText={`100 ${this.state.currency}`}
+						/>
+						<MenuItem
+							value={250}
+							onClick={() => this.maxPriceHandler(250)}
+							primaryText={`250 ${this.state.currency}`}
+						/>
+						<MenuItem
+							value={600}
+							onClick={() => this.maxPriceHandler(600)}
+							primaryText={`600 ${this.state.currency}`}
+						/>
+					</DropDownMenu>
+
+					<DropDownMenu
+						className="form__drop-down"
 						value={this.state.currency}
-						style={styles.menu}
 						autoWidth={false}
 					>
 						<MenuItem
 							value="USD"
 							primaryText="USD"
-							onClick={() =>
-								this.currencyHandler('USD')
-							}
+							onClick={() => this.currencyHandler('USD')}
 						/>
 						<MenuItem
 							value="EUR"
 							primaryText="EUR"
-							onClick={() =>
-								this.currencyHandler('EUR')
-							}
+							onClick={() => this.currencyHandler('EUR')}
 						/>
 						<MenuItem
 							value="UAH"
 							primaryText="UAH"
-							onClick={() =>
-								this.currencyHandler('UAH')
-							}
-						/>
-					</DropDownMenu>
-
-					<DropDownMenu
-						value={this.state.radius}
-						style={styles.menu}
-						autoWidth={false}
-					>
-						<MenuItem
-							value={10}
-							onClick={() =>
-								this.radiusHandler(10)
-							}
-							primaryText="10 km"
-						/>
-						<MenuItem
-							value={25}
-							onClick={() =>
-								this.radiusHandler(25)
-							}
-							primaryText="25 km"
-						/>
-						<MenuItem
-							value={40}
-							onClick={() =>
-								this.radiusHandler(40)
-							}
-							primaryText="40 km"
-						/>
-					</DropDownMenu>
-
-					<DropDownMenu
-						value={this.state.maxPrice}
-						style={styles.menu}
-						autoWidth={false}
-					>
-						<MenuItem
-							value={100}
-							onClick={() =>
-								this.maxPriceHandler(100)
-							}
-							primaryText={`100 ${
-								this.state.currency
-							}`}
-						/>
-						<MenuItem
-							value={250}
-							onClick={() =>
-								this.maxPriceHandler(250)
-							}
-							primaryText={`250 ${
-								this.state.currency
-							}`}
-						/>
-						<MenuItem
-							value={600}
-							onClick={() =>
-								this.maxPriceHandler(600)
-							}
-							primaryText={`600 ${
-								this.state.currency
-							}`}
+							onClick={() => this.currencyHandler('UAH')}
 						/>
 					</DropDownMenu>
 
 					<RaisedButton
+						className="search-button"
 						label="FIND"
 						primary={true}
-						style={styles.btn}
 						onClick={this.getRequest}
+					/>
+					
+					<Snackbar
+						className="snackbar"
+						open={this.state.snackbarOpen}
+						message="Entered date is not correct. Please check the form."
+						autoHideDuration={4000}
+						onRequestClose={this.handleRequestClose}
 					/>
 				</div>
 			</div>
@@ -241,9 +240,5 @@ class Form extends Component {
 }
 
 const mapStateToProps = state => state;
-
-// const mapDispatchToProps = (dispatch) => ({
-
-// })
 
 export default connect(mapStateToProps)(Form);

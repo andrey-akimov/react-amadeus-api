@@ -1,4 +1,6 @@
 import React from 'react';
+import {Card, CardActions, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
 import * as _ from 'lodash';
 
 const Hotel = props => {
@@ -12,51 +14,79 @@ const Hotel = props => {
 		`&size=600x300` +
 		`&key=${key}`;
 
+	const styles = {
+		phoneNum:{
+			fontSize: '18px'
+		},
+		phoneBlock:{
+			paddingTop: '0'
+		}
+	}
+
 	return (
-		<div>
-			{/* IMG */}
+		<Card className="card">
+			<CardMedia overlay={
+				<CardTitle
+					className="card-title"
+					title={props.property_name.length <= 30
+						? props.property_name
+						: props.property_name.slice(0, 30) + '...'
+					}
+					subtitle={props.address.line1}
+				/>
+			}
+			>
 			<img
-				src="http://fakeimg.pl/350x200/?text=No+photo&font=lobster"
+				src={
+					// There are no pictures in the API :(
+					props.images.length < 1 
+					? "http://fakeimg.pl/350x200/?text=No+photo" 
+					: props.images[0]
+				}
 				alt="photos"
 			/>
+			</CardMedia>
 
-			{/* NAME AND ADDRESS */}
-			<h2>
-				{props.property_name},&nbsp;
-				<a href={googleMapRef} target="_blank">
-					{props.address.line1}
-				</a>
-			</h2>
-
-			{/* CONTACTS */}
-			<p>
-				{_.uniq(props.contacts).map(contact => (
-					<span key={_.uniqueId()}>{contact.detail}</span>
-				))}
-			</p>
-
-			{/* DESCRIPTION */}
-			<p>
-				{props.amenities.map(amenity => (
-					<span key={_.uniqueId()}>{amenity.description}</span>
-				))}
-			</p>
-
-			{/* ROOMS FOR RENT */}
-			<p>
-				{props.rooms.map(room => (
+			<CardText>
+				Description: {props.amenities.map((amenity, i, arr) => (
 					<span key={_.uniqueId()}>
-						{room.room_type_info.room_type}
+						{amenity.description}
+						{(arr.length - 1 === i) ? null : ', '}
 					</span>
 				))}
-			</p>
 
-			{/* PRICE */}
-			<p>
-				{props.total_price.amount}&nbsp;
-				{props.total_price.currency}
-			</p>
-		</div>
+				<p>
+					Type of room: {props.rooms.map(room => (
+						<span key={_.uniqueId()}>
+							{room.room_type_info.room_type}
+						</span>
+					))}
+				</p>
+
+				<p>
+					Price: {props.total_price.amount}&nbsp;
+					{props.total_price.currency}
+				</p>
+			</CardText>
+
+			<CardTitle
+				style={styles.phoneBlock}
+				title={_.uniq(props.contacts).map((contact, i, arr) => (
+					<span style={styles.phoneNum} key={_.uniqueId()}>
+						{contact.detail}
+						{(arr.length - 1 === i) ? null : ', '}
+					</span>
+				))}
+			/>
+
+			<CardActions>
+				<FlatButton 
+					label="Look at the Google Maps"
+					href={googleMapRef}
+					target="_blank"
+				/>
+			</CardActions>
+		</Card>
 	);
 };
 

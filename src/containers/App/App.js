@@ -7,13 +7,20 @@ import './App.css';
 import { connect } from 'react-redux';
 
 class App extends Component {
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return false;
+	}
+	
 	render() {
 		return (
 			<MuiThemeProvider>
 				<div className="App">
-					<Header />
-					<Form />
-					<HotelsList hotels={this.props.hotels} />
+					<div className="main">
+						<Header />
+						<Form />
+					</div>
+					<HotelsList />
 				</div>
 			</MuiThemeProvider>
 		);
