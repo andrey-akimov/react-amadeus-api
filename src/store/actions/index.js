@@ -6,3 +6,7 @@ export const getHotels = data => ({
 export const loading = () => ({
 	type: 'LOADING'
 });
+
+export const getError = () => ({
+	type: 'ERROR'
+});

@@ -7,7 +7,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar';
 import * as action from '../../store/actions';
-import './style.css'
+import './style.css';
 
 class Form extends Component {
 	state = {
@@ -18,7 +18,7 @@ class Form extends Component {
 		currency: 'USD',
 		radius: 10,
 		maxPrice: 250
-	}
+	};
 
 	// SCU
 	shouldComponentUpdate(nextProps, nextState) {
@@ -33,51 +33,38 @@ class Form extends Component {
 
 	handleRequestClose = () => {
 		this.setState({ snackbarOpen: false });
-	}
-	
-	airportHandler = (airport) => {
+	};
+
+	airportHandler = airport => {
 		this.setState({ airport });
-	}
+	};
 
-	fromDateHandler = (from) => {
+	fromDateHandler = from => {
 		this.setState({ from });
-	}
+	};
 
-	toDateHandler = (to) => {
+	toDateHandler = to => {
 		this.setState({ to });
-	}
+	};
 
-	currencyHandler = (currency) => {
+	currencyHandler = currency => {
 		this.setState({ currency });
-	}
+	};
 
-	radiusHandler = (radius) => {
+	radiusHandler = radius => {
 		this.setState({ radius });
-	}
+	};
 
-	maxPriceHandler = (maxPrice) => {
+	maxPriceHandler = maxPrice => {
 		this.setState({ maxPrice });
-	}
+	};
 
 	getRequest = () => {
 		const key = '4H93JHYp4gqYKnNzXRJdDPvyyYrFZ5Xp';
-		const {
-			airport,
-			from,
-			to,
-			currency,
-			radius,
-			maxPrice
-		} = this.state;
-		const date = new Date();
-		const dateFrom = new Date(from);
-		const dateTo = new Date(to);
+		const { airport, from, to, currency, radius, maxPrice } = this.state;
 
 		// Form validation
-		if(
-			(dateFrom.getDate() >= date.getDate()) && (dateFrom.getMonth() >= date.getMonth()) &&
-			(dateTo.getDate() >= dateFrom.getDate()) && (dateTo.getMonth() >= dateFrom.getMonth())
-		){
+		if (from !== null && to !== null) {
 			this.props.dispatch(action.loading());
 			axios
 				.get(
@@ -93,13 +80,16 @@ class Form extends Component {
 				)
 				.then(res => {
 					const filteredDada = res.data.results.filter(hotel => {
-						return (hotel.total_price.amount <= this.state.maxPrice) ? true : false;
+						return hotel.total_price.amount <= this.state.maxPrice;
 					});
 					this.props.dispatch(action.getHotels(filteredDada));
 				})
-				.catch(error => console.log(error));
+				.catch(error => {
+					console.log(error);
+					this.props.dispatch(action.getError());
+				});
 		} else {
-			this.setState({snackbarOpen: true});
+			this.setState({ snackbarOpen: true });
 		}
 	};
 
@@ -114,23 +104,17 @@ class Form extends Component {
 					>
 						<MenuItem
 							value="ODS"
-							onClick={() =>
-								this.airportHandler('ODS')
-							}
+							onClick={() => this.airportHandler('ODS')}
 							primaryText="Odessa"
 						/>
 						<MenuItem
 							value="KBP"
-							onClick={() =>
-								this.airportHandler('KBP')
-							}
+							onClick={() => this.airportHandler('KBP')}
 							primaryText="Kiev"
 						/>
 						<MenuItem
 							value="LWO"
-							onClick={() =>
-								this.airportHandler('LWO')
-							}
+							onClick={() => this.airportHandler('LWO')}
 							primaryText="Lviv"
 						/>
 					</DropDownMenu>
@@ -161,18 +145,14 @@ class Form extends Component {
 						className="form__date-piker"
 						hintText="From"
 						ref="from"
-						onChange={() =>
-							this.fromDateHandler(this.refs.from.refs.input.props.value)
-						}
+						onChange={() => this.fromDateHandler(this.refs.from.refs.input.props.value)}
 					/>
 
 					<DatePicker
 						className="form__date-piker"
 						hintText="To"
 						ref="to"
-						onChange={() =>
-							this.toDateHandler(this.refs.to.refs.input.props.value)
-						}
+						onChange={() => this.toDateHandler(this.refs.to.refs.input.props.value)}
 					/>
 
 					<DropDownMenu
@@ -225,7 +205,7 @@ class Form extends Component {
 						primary={true}
 						onClick={this.getRequest}
 					/>
-					
+
 					<Snackbar
 						className="snackbar"
 						open={this.state.snackbarOpen}
