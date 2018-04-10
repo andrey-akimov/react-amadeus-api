@@ -60,11 +60,11 @@ class Form extends Component {
 	};
 
 	getRequest = () => {
-		const key = '4H93JHYp4gqYKnNzXRJdDPvyyYrFZ5Xp';
+		const key = 'G8JKCch9gPzOUPV6j2NjAqIb0hW2Dawh';
 		const { airport, from, to, currency, radius, maxPrice } = this.state;
 
 		// Form validation
-		if (from !== null && to !== null) {
+		if (from !== null && to !== null && (from === to || from < to)) {
 			this.props.dispatch(action.loading());
 			axios
 				.get(
