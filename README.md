@@ -37,5 +37,6 @@
 
 # P.S.
 
+*   Развернутая версия [тут](https://rojer1989.github.io/react-amadeus-api/)
 *   Сделано адаптивно
 *   Для запуска: из корня $ npm run start
