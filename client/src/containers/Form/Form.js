@@ -17,7 +17,8 @@ class Form extends Component {
 		to: null,
 		currency: 'USD',
 		radius: 10,
-		maxPrice: 250
+		maxPrice: 250,
+		key: '',
 	};
 
 	// SCU
@@ -31,6 +32,14 @@ class Form extends Component {
 		return needReload;
 	}
 
+	// CDM
+	componentDidMount() {
+		axios.get('/api')
+			.then(res => {
+				this.setState({ key: res.data });
+			})
+	}
+	
 	handleRequestClose = () => {
 		this.setState({ snackbarOpen: false });
 	};
@@ -60,7 +69,6 @@ class Form extends Component {
 	};
 
 	getRequest = () => {
-		const key = 'G8JKCch9gPzOUPV6j2NjAqIb0hW2Dawh';
 		const { airport, from, to, currency, radius, maxPrice } = this.state;
 
 		// Form validation
@@ -69,7 +77,7 @@ class Form extends Component {
 			axios
 				.get(
 					`https://api.sandbox.amadeus.com/v1.2/hotels/search-airport?` +
-						`apikey=${key}` +
+						`apikey=${this.state.key}` +
 						`&location=${airport}` +
 						`&check_in=${from}` +
 						`&check_out=${to}` +

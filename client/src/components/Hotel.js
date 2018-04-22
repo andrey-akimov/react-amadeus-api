@@ -40,7 +40,7 @@ const Hotel = props => {
 				src={
 					// There are no pictures in the API :(
 					props.images.length < 1 
-					? "http://fakeimg.pl/350x200/?text=No+photo" 
+					? "https://fakeimg.pl/350x200/?text=No+photo" 
 					: props.images[0]
 				}
 				alt="photos"
