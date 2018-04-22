@@ -37,6 +37,6 @@
 
 # P.S.
 
-*   Развернутая версия [тут](https://rojer1989.github.io/react-amadeus-api/)
+*   Развернутая версия [тут](https://amadeus-api.herokuapp.com/)
 *   Сделано адаптивно
 *   Для запуска: из корня $ npm run start
